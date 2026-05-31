@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -15,17 +16,20 @@ export class AuthorsController {
 
   @Get()
   findAll() {
-    return { authors: this.authorsService.findAll() };
+    const authors = this.authorsService.findAll();
+    return { status: HttpStatus.OK, body: authors };
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.authorsService.findOne(+id);
+    const author = this.authorsService.findOne(+id);
+    return { status: HttpStatus.OK, body: author };
   }
 
   @Post()
   create(@Body() author: { name: string; email: string }) {
-    return this.authorsService.create(author);
+    const createdAuthor = this.authorsService.create(author);
+    return { status: HttpStatus.CREATED, body: createdAuthor };
   }
 
   @Patch(':id')
@@ -33,11 +37,16 @@ export class AuthorsController {
     @Param('id') id: string,
     @Body() authorUpdate: { name?: string; email?: string },
   ) {
-    return this.authorsService.update(+id, authorUpdate);
+    const updatedAuthor = this.authorsService.update(+id, authorUpdate);
+    return { status: HttpStatus.OK, body: updatedAuthor };
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.authorsService.delete(+id);
+    this.authorsService.delete(+id);
+    return {
+      status: HttpStatus.NO_CONTENT,
+      body: `Author with ID ${id} has been deleted successfully`,
+    };
   }
 }

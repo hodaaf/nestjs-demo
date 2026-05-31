@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { AuthorsService } from '../authors/authors.service';
 
 @Injectable()
@@ -33,12 +33,16 @@ export class BooksService {
   }
 
   findOne(id: number) {
-    return this.books.find((book) => book.id === id);
+    const book = this.books.find((book) => book.id === id);
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+    return book;
   }
 
   create(book: { title: string; authorId: number }) {
     if (!this.authorsService.getAvailableAuthorsIds().includes(book.authorId)) {
-      throw new Error(`Author with ID ${book.authorId} does not exist
+      throw new NotFoundException(`Author with ID ${book.authorId} does not exist
         Insert a valid authorId from the following list: ${this.authorsService.getAvailableAuthorsIds().join(', ')} or create a new author`);
     }
     const newBook = {
@@ -53,13 +57,13 @@ export class BooksService {
     const bookIndex = this.books.findIndex((book) => book.id === id);
 
     if (bookIndex === -1) {
-      throw new Error(`Book with ID ${id} not found`);
+      throw new NotFoundException(`Book with ID ${id} not found`);
     }
     if (
       book.authorId &&
       !this.authorsService.getAvailableAuthorsIds().includes(book.authorId)
     ) {
-      throw new Error(`Author with ID ${book.authorId} does not exist
+      throw new NotFoundException(`Author with ID ${book.authorId} does not exist
         Insert a valid authorId from the following list: ${this.authorsService.getAvailableAuthorsIds().join(', ')} or create a new author`);
     }
     this.books[bookIndex] = {
@@ -72,7 +76,7 @@ export class BooksService {
   delete(id: number) {
     const bookIndex = this.books.findIndex((book) => book.id === id);
     if (bookIndex === -1) {
-      throw new Error(`Book with ID ${id} not found`);
+      throw new NotFoundException(`Book with ID ${id} not found`);
     }
     this.books.splice(bookIndex, 1);
   }
