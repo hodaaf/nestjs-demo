@@ -50,24 +50,28 @@ export class GenresService {
 
   update(id: number, genre: { name?: string }) {
     const genreIndex = this.genres.findIndex((genre) => genre.id === id);
+
     if (genreIndex === -1) {
       throw new NotFoundException(`Genre with ID ${id} not found`);
     }
-    const existingCount = this.genres.filter(
-      (g) => g.name.toLowerCase() === genre.name?.toLowerCase(),
-    ).length;
-
-    if (existingCount > 1) {
-      throw new BadRequestException(
-        `Genre with name ${genre.name} already exists`,
+    if (genre.name) {
+      const normalizedNewName = genre.name.toLowerCase();
+      const duplicateGenre = this.genres.find(
+        (g) => g.id !== id && g.name.toLowerCase() === normalizedNewName,
       );
-    }
 
-    this.genres[genreIndex] = {
-      ...this.genres[genreIndex],
-      ...genre,
-    };
-    return this.genres[genreIndex];
+      if (duplicateGenre) {
+        throw new BadRequestException(
+          `Genre with name ${genre.name} already exists`,
+        );
+      }
+
+      this.genres[genreIndex] = {
+        ...this.genres[genreIndex],
+        ...genre,
+      };
+      return this.genres[genreIndex];
+    }
   }
 
   delete(id: number) {

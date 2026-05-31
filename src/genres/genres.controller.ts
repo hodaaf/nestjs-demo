@@ -16,12 +16,13 @@ export class GenresController {
 
   @Get()
   findAll() {
-    return this.genresService.findAll();
+    const genres = this.genresService.findAll();
+    return { status: HttpStatus.OK, body: genres };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    const genre = this.genresService.findOne(id);
+  findOne(@Param('id') id: string) {
+    const genre = this.genresService.findOne(+id);
     return { status: HttpStatus.OK, body: genre };
   }
 
@@ -32,14 +33,14 @@ export class GenresController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() genre: { name?: string }) {
-    const updatedGenre = this.genresService.update(id, genre);
+  update(@Param('id') id: string, @Body() genre: { name?: string }) {
+    const updatedGenre = this.genresService.update(+id, genre);
     return { status: HttpStatus.OK, body: updatedGenre };
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number) {
-    this.genresService.delete(id);
+  delete(@Param('id') id: string) {
+    this.genresService.delete(+id);
     return { status: HttpStatus.NO_CONTENT };
   }
 }

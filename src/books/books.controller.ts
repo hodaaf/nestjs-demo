@@ -28,7 +28,13 @@ export class BooksController {
 
   @Post()
   create(
-    @Body() book: { title: string; authorId: number; publisherId: number },
+    @Body()
+    book: {
+      title: string;
+      authorId: number;
+      publisherId: number;
+      genreIds: number[];
+    },
   ) {
     const createdBook = this.booksService.create(book);
     return { status: HttpStatus.CREATED, body: createdBook };
@@ -38,7 +44,12 @@ export class BooksController {
   update(
     @Param('id') id: string,
     @Body()
-    bookUpdate: { title?: string; authorId?: number; publisherId?: number },
+    bookUpdate: {
+      title?: string;
+      authorId?: number;
+      publisherId?: number;
+      genreIds?: number[];
+    },
   ) {
     const updatedBook = this.booksService.update(+id, bookUpdate);
     return { status: HttpStatus.OK, body: updatedBook };
