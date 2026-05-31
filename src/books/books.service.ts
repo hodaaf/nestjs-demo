@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AuthorsService } from '../authors/authors.service';
-import { PublishersService } from 'src/publishers/publishers.service';
 import { GenresService } from 'src/genres/genres.service';
+import { PublishersService } from 'src/publishers/publishers.service';
 
 @Injectable()
 export class BooksService {
@@ -46,7 +46,13 @@ export class BooksService {
     private readonly genresService: GenresService,
   ) {}
 
-  findAll() {
+  findAll(includeAuthor: boolean) {
+    if (includeAuthor) {
+      return this.books.map((book) => {
+        const author = this.authorsService.findOne(book.authorId);
+        return { ...book, author };
+      });
+    }
     return this.books;
   }
 
