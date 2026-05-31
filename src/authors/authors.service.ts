@@ -63,4 +63,8 @@ export class AuthorsService {
 
     return authorIndex;
   }
+
+  getAvailableAuthorsIds() {
+    return this.authors.map((author) => author.id);
+  }
 }
