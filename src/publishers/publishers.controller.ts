@@ -8,27 +8,27 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { PublisherService } from './publisher.service';
+import { PublishersService } from './publishers.service';
 
-@Controller('publisher')
-export class PublisherController {
-  constructor(private readonly publisherService: PublisherService) {}
+@Controller('publishers')
+export class PublishersController {
+  constructor(private readonly publishersService: PublishersService) {}
 
   @Get()
   findAll() {
-    const publishers = this.publisherService.findAll();
+    const publishers = this.publishersService.findAll();
     return { status: HttpStatus.OK, body: publishers };
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    const publisher = this.publisherService.findOne(+id);
+    const publisher = this.publishersService.findOne(+id);
     return { status: HttpStatus.OK, body: publisher };
   }
 
   @Post()
   create(@Body() publisher: { name: string; address: string }) {
-    const createdPublisher = this.publisherService.create(publisher);
+    const createdPublisher = this.publishersService.create(publisher);
     return {
       status: HttpStatus.CREATED,
       body: createdPublisher,
@@ -40,7 +40,10 @@ export class PublisherController {
     @Param('id') id: string,
     @Body() publisherUpdate: { name?: string; address?: string },
   ) {
-    const updatedPublisher = this.publisherService.update(+id, publisherUpdate);
+    const updatedPublisher = this.publishersService.update(
+      +id,
+      publisherUpdate,
+    );
     return {
       status: HttpStatus.OK,
       body: updatedPublisher,
@@ -49,7 +52,7 @@ export class PublisherController {
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    this.publisherService.delete(+id);
+    this.publishersService.delete(+id);
     return {
       status: HttpStatus.NO_CONTENT,
       body: `Publisher with ID ${id} has been deleted successfully`,

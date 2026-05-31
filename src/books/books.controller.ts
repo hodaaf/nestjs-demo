@@ -27,7 +27,9 @@ export class BooksController {
   }
 
   @Post()
-  create(@Body() book: { title: string; authorId: number }) {
+  create(
+    @Body() book: { title: string; authorId: number; publisherId: number },
+  ) {
     const createdBook = this.booksService.create(book);
     return { status: HttpStatus.CREATED, body: createdBook };
   }
@@ -35,7 +37,8 @@ export class BooksController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() bookUpdate: { title?: string; authorId?: number },
+    @Body()
+    bookUpdate: { title?: string; authorId?: number; publisherId?: number },
   ) {
     const updatedBook = this.booksService.update(+id, bookUpdate);
     return { status: HttpStatus.OK, body: updatedBook };

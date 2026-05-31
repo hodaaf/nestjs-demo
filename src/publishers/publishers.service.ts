@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
-export class PublisherService {
+export class PublishersService {
   private publishers = [
     {
       id: 1,

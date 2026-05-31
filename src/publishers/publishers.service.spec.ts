@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PublisherService } from './publisher.service';
+import { PublishersService } from './publishers.service';
 
-describe('PublisherService', () => {
+describe('PublishersService', () => {
   let service: PublisherService;
 
   beforeEach(async () => {

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AuthorsService } from '../authors/authors.service';
-import { PublisherService } from 'src/publisher/publisher.service';
+import { PublishersService } from 'src/publishers/publishers.service';
 
 @Injectable()
 export class BooksService {
@@ -37,7 +37,7 @@ export class BooksService {
 
   constructor(
     private readonly authorsService: AuthorsService,
-    private readonly publisherService: PublisherService,
+    private readonly publishersService: PublishersService,
   ) {}
 
   findAll() {
@@ -58,12 +58,12 @@ export class BooksService {
         Insert a valid authorId from the following list: ${this.authorsService.getAvailableAuthorsIds().join(', ')} or create a new author`);
     }
     if (
-      !this.publisherService
+      !this.publishersService
         .getAvailablePublishersIds()
         .includes(book.publisherId)
     ) {
       throw new BadRequestException(`Publisher with ID ${book.publisherId} does not exist
-        Insert a valid publisherId from the following list: ${this.publisherService.getAvailablePublishersIds().join(', ')} or create a new publisher`);
+        Insert a valid publisherId from the following list: ${this.publishersService.getAvailablePublishersIds().join(', ')} or create a new publisher`);
     }
     const newBook = {
       id: this.books[this.books.length - 1].id + 1,
@@ -91,12 +91,12 @@ export class BooksService {
     }
     if (
       book.publisherId &&
-      !this.publisherService
+      !this.publishersService
         .getAvailablePublishersIds()
         .includes(book.publisherId)
     ) {
       throw new BadRequestException(`Publisher with ID ${book.publisherId} does not exist
-        Insert a valid publisherId from the following list: ${this.publisherService.getAvailablePublishersIds().join(', ')} or create a new publisher`);
+        Insert a valid publisherId from the following list: ${this.publishersService.getAvailablePublishersIds().join(', ')} or create a new publisher`);
     }
     this.books[bookIndex] = {
       ...this.books[bookIndex],
