@@ -50,9 +50,17 @@ export class BooksService {
     if (includeAuthor) {
       return this.books.map((book) => {
         const author = this.authorsService.findOne(book.authorId);
-        return { ...book, author };
+
+        return {
+          id: book.id,
+          title: book.title,
+          publisherId: book.publisherId,
+          genreIds: book.genreIds,
+          author,
+        };
       });
     }
+
     return this.books;
   }
 
