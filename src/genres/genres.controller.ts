@@ -5,6 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -21,8 +22,8 @@ export class GenresController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const genre = this.genresService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    const genre = this.genresService.findOne(id);
     return { status: HttpStatus.OK, body: genre };
   }
 
@@ -33,14 +34,17 @@ export class GenresController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() genre: { name?: string }) {
-    const updatedGenre = this.genresService.update(+id, genre);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() genre: { name?: string },
+  ) {
+    const updatedGenre = this.genresService.update(id, genre);
     return { status: HttpStatus.OK, body: updatedGenre };
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    this.genresService.delete(+id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    this.genresService.delete(id);
     return { status: HttpStatus.NO_CONTENT };
   }
 }

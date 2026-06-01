@@ -5,6 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -21,8 +22,8 @@ export class AuthorsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const author = this.authorsService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    const author = this.authorsService.findOne(id);
     return { status: HttpStatus.OK, body: author };
   }
 
@@ -34,16 +35,16 @@ export class AuthorsController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() authorUpdate: { name?: string; email?: string },
   ) {
-    const updatedAuthor = this.authorsService.update(+id, authorUpdate);
+    const updatedAuthor = this.authorsService.update(id, authorUpdate);
     return { status: HttpStatus.OK, body: updatedAuthor };
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    this.authorsService.delete(+id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    this.authorsService.delete(id);
     return {
       status: HttpStatus.NO_CONTENT,
       body: `Author with ID ${id} has been deleted successfully`,

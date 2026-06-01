@@ -5,6 +5,8 @@ import {
   Get,
   HttpStatus,
   Param,
+  ParseBoolPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -16,14 +18,14 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  findAll(@Query('includeAuthor') includeAuthor: string) {
-    const books = this.booksService.findAll(includeAuthor === 'true');
+  findAll(@Query('includeAuthor', ParseBoolPipe) includeAuthor: boolean) {
+    const books = this.booksService.findAll(includeAuthor);
     return { status: HttpStatus.OK, body: books };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const book = this.booksService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    const book = this.booksService.findOne(id);
     return { status: HttpStatus.OK, body: book };
   }
 
@@ -43,7 +45,7 @@ export class BooksController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body()
     bookUpdate: {
       title?: string;
@@ -52,13 +54,13 @@ export class BooksController {
       genreIds?: number[];
     },
   ) {
-    const updatedBook = this.booksService.update(+id, bookUpdate);
+    const updatedBook = this.booksService.update(id, bookUpdate);
     return { status: HttpStatus.OK, body: updatedBook };
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    this.booksService.delete(+id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    this.booksService.delete(id);
     return {
       status: HttpStatus.NO_CONTENT,
       body: `Book with ID ${id} has been deleted successfully`,
